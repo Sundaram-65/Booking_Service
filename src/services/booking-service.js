@@ -1,16 +1,43 @@
-
+const axios=require('axios');
 const {BookingRepository}=require('../repository/index');
 const { ServiceError } = require('../utils/errors');
+const {FLIGHT_SERVICE_PATH}=require('../config/serverConfig')
 const bookingRepository=new BookingRepository();
 class BookingService{
 
     async createBooking(data){
 
         try {
-            const booking =await bookingRepository(data);
-            return booking;
+            const flightId=data.flightId;
+
+            const getFlightRequestUrl=`${FLIGHT_SERVICE_PATH}/api/v1/flight/${flightId}`;
+
+            const flight=await axios.get(getFlightRequestUrl);
+            // console.log('From service',flight.data.data);
+            // const booking =await bookingRepository(data);
+            // return booking;
+            // return flight.data.data;
+            const flightData=flight.data.data;
+            const flightPrice=flightData.price;
+            if(data.noOfSeats>flightData.totalSeats){
+                throw  new ServiceError();
+            }
+
+            const totalCost=flightPrice*data.noOfSeats;
+            const bookingPayload={...data,totalCost};
+            const booking=await bookingRepository.createBooking(bookingPayload);
+
+            const updateFlightRequesturl=`${FLIGHT_SERVICE_PATH}/api/v1/flight/${booking.flightId}`;
+            await axios.patch(updateFlightRequesturl,{
+                totalSeats:flightData.totalSeats-booking.noOfSeats
+            });
+
+            const finalBooking =await bookingRepository.updateBooking({status:'Booked'},booking.id);
+            return finalBooking;
+
+
         } catch (error) {
-            if(error.name=='SequelizeValidatioError'){
+            if(error.name=='SequelizeValidatioError' || error.name=='RepositoryError'){
                 throw error;
             }
             throw new ServiceError(error);
