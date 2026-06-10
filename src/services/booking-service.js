@@ -34,7 +34,7 @@ class BookingService{
 
             const finalBooking =await bookingRepository.updateBooking({status:'Booked'},booking.id);
             return finalBooking;
-
+            
 
         } catch (error) {
             if(error.name=='SequelizeValidatioError' || error.name=='RepositoryError'){
