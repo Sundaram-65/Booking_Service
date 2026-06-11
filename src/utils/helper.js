@@ -61,7 +61,7 @@ const getBookingConfirmationTemplate = (userEmail) => {
                         <!-- Header -->
                         <tr>
                             <td style="background: linear-gradient(135deg, #1a73e8, #0d47a1); padding: 40px; text-align:center;">
-                                <h1 style="color:#ffffff; margin:0; font-size:28px; letter-spacing:1px;">✈️ SkyBooker Airlines</h1>
+                                <h1 style="color:#ffffff; margin:0; font-size:28px; letter-spacing:1px;"> SkyBooker Airlines</h1>
                                 <p style="color:#bbdefb; margin:8px 0 0; font-size:14px;">Your journey begins here</p>
                             </td>
                         </tr>
@@ -69,7 +69,7 @@ const getBookingConfirmationTemplate = (userEmail) => {
                         <!-- Success Banner -->
                         <tr>
                             <td style="background-color:#e8f5e9; padding: 20px; text-align:center; border-bottom: 2px solid #c8e6c9;">
-                                <h2 style="color:#2e7d32; margin:0; font-size:20px;">🎉 Booking Confirmed!</h2>
+                                <h2 style="color:#2e7d32; margin:0; font-size:20px;"> Booking Confirmed!</h2>
                                 <p style="color:#388e3c; margin:6px 0 0; font-size:14px;">Your seat has been successfully reserved.</p>
                             </td>
                         </tr>
