@@ -1,8 +1,9 @@
 const axios=require('axios');
 const {BookingRepository}=require('../repository/index');
 const { ServiceError } = require('../utils/errors');
-const {FLIGHT_SERVICE_PATH}=require('../config/serverConfig')
+const {FLIGHT_SERVICE_PATH,AUTH_SERVICE_PATH}=require('../config/serverConfig')
 const bookingRepository=new BookingRepository();
+const {sendBasicEmail,sendMessageToQueue}=require('../utils/helper');
 class BookingService{
 
     async createBooking(data){
@@ -33,6 +34,15 @@ class BookingService{
             });
 
             const finalBooking =await bookingRepository.updateBooking({status:'Booked'},booking.id);
+            
+            
+            const userId=data.userId;
+            const getUserUrl=`${AUTH_SERVICE_PATH}/api/v1/user/${userId}`;
+            const user=await axios.get(getUserUrl);
+            const userEmail=user.data.data.email;
+            sendBasicEmail('Airline@gmail.com',userEmail,'Booking Confirmation','Congratulation Booking Succesfull');
+            sendMessageToQueue(userEmail);
+            
             return finalBooking;
             
 
